@@ -13,6 +13,25 @@ router.get('/:id', function(req, res, next) {
   res.send(userFun.getUser(id));
 });
 
+router.post("/login", function(req,res,next) {  
+
+  console.log("login body",req.body);
+  newid=userFun.loginUser(req.body.email,req.body.password);
+  switch(newid){
+    case -1:
+      msg="Email not registered";
+      break;
+    case -2:
+      msg="Wrong password";
+      break;
+    default:
+      msg="Login successfully";
+  }
+  res.send({id:newid,message:msg});
+
+});
+
+
 router.post("/", function(req,res,next) {  
 
     console.log(req.body);

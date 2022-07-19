@@ -68,6 +68,16 @@ var updateUser = (id,newInfo) => regUsers.us=regUsers.us.map((u)=>(u.id==id)?(
       }, {}))
 :u);
 
+var loginUser=(email,password) => {
+    if(firstCall) {
+        firstCall=false;
+        readFile();
+    }
+    u=regUsers.us.find((u)=>u.email==email);
+    if(u===undefined) return -1; // email not registered
+    if(u.password==password) return u.id; // login successful.
+    return -2; // password wrong
+}
 var addUser=(name, email, password) => {
     if(firstCall) {
         firstCall=false;
@@ -85,5 +95,5 @@ var addUser=(name, email, password) => {
     return newId;
 }
 
-module.exports = {listUser,getUser,updateUser, addUser};
+module.exports = {listUser,getUser,updateUser, addUser,loginUser};
 
