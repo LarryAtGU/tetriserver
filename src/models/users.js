@@ -1,4 +1,6 @@
+const sendEmail =require('./sendemail');
 const fs = require('fs');
+let firstCall=true;
 
 
 var regUsers= {us: [
@@ -30,10 +32,8 @@ const readFile=() => {
     }
     regUsers = JSON.parse(rawdata);
 
-    console.log(regUsers);
     }
     
-    let firstCall=true;
     const saveFile=()=> {
     
       fs.writeFile(fileName, JSON.stringify(regUsers), err => {
@@ -75,7 +75,10 @@ var loginUser=(email,password) => {
     }
     u=regUsers.us.find((u)=>u.email==email);
     if(u===undefined) return -1; // email not registered
-    if(u.password==password) return u.id; // login successful.
+    if(u.password==password){ 
+        sendEmail(u.email,"login successfully", "congratulation.");
+        return u.id; // login successful.
+    }
     return -2; // password wrong
 }
 var addUser=(name, email, password) => {
