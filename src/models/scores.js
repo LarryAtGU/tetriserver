@@ -1,4 +1,5 @@
 const fs = require('fs');
+var userFun  = require ('../models/users')
 let firstCall=true;
 const fileName='./scores.json';
 
@@ -44,7 +45,23 @@ const saveFile=()=> {
     
 }
     
+var setScore = (id, score) => {
+
+    const name=userFun.getUser(id)[0].name;
     
+    const rank=scores.filter((sc)=>(sc.score>score)).length+1;
+    if(rank>10)return 0; // not in top 10
+    scores=scores.map((sc)=>(
+        sc.rank<rank?sc:
+        {...sc,rank:sc.rank+1}
+    ));
+    scores.push({rank:rank,name:name,score:score});
+    scores.sort((s1,s2)=>s1.rank-s2.rank);
+    if(scores.length>10) scores.pop(); // remove the last one.
+    saveFile();
+    return rank;
+
+}    
 var getScores = () => {
     if(firstCall) {
         firstCall=false;
@@ -53,5 +70,5 @@ var getScores = () => {
     return scores;
 }
 
-module.exports = {getScores};
+module.exports = {getScores, setScore};
 
