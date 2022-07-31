@@ -9,29 +9,16 @@ var scores = [
     name: "Blue Fish",
     score: 8000,
   },
-  {
-    rank: 2,
-    name: "Mier",
-    score: 7000,
-  },
-  {
-    rank: 3,
-    name: "Little Bee",
-    score: 6000,
-  },
 ];
 
 const readFile = () => {
   try {
-    console.log("in score readfile");
     var rawdata = fs.readFileSync(fileName);
   } catch (err) {
     console.log("read file error is: ", err);
     saveFile();
   }
   scores = JSON.parse(rawdata);
-
-  console.log(scores);
 };
 
 const saveFile = () => {
