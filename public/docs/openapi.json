@@ -1,0 +1,316 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "LTetris 1.0.0",
+    "description": "This is a simple API server for LTetris at [https://github.com/LarryAtGU/LarryTetris](https://github.com/LarryAtGU/LarryTetris).\nLTetris is a small computer game of tetris build in React + Typescript framework. The API server is required to run LTetris. The server is build on node.js and express, and it serve the data storage function for LTetris.\nThe source code of the server can be found at [https://github.com/LarryAtGU/tetrixServe](https://github.com/LarryAtGU/tetrixServe). ",
+    "contact": {
+      "email": "l.wen@griffith.edu.au"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://choosealicense.com/licenses/mit/"
+    },
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "User",
+      "description": "Everything about user operation"
+    },
+    {
+      "name": "Score",
+      "description": "Score section"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Find list of all user's id",
+        "responses": {
+          "200": {
+            "description": "Successfully get list of user's ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "users": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer",
+                        "example": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Create a user",
+        "description": "This is called when the client register a new user. It will check if the email is unique, that means one email can only register a single user.",
+        "operationId": "userFun.addUser",
+        "requestBody": {
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Blue Fish"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "Bluefish@bluefish.come"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "mypass"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A new user is successfuly created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "the new user id created (a unique postive number), if the email has been registered, -1 will be returned.",
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "New User is Added"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Find all user information by user id",
+        "description": "Returns a single user's information",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID of the user to return",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation, retrieve information. return is an arry. If no user found, return an empty array, otherwise, return an array of one user object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Blue Fish"
+                      },
+                      "email": {
+                        "type": "string",
+                        "example": "myemail@mydomain.com"
+                      },
+                      "password": {
+                        "type": "string",
+                        "example": "mypassword"
+                      },
+                      "url": {
+                        "type": "string",
+                        "description": "the url of an image of the returned user",
+                        "example": "https://cdn.mos.cms.futurecdn.net/BgZFhT7piMqXpyzfWrdKyP-320-80.jpg"
+                      },
+                      "active": {
+                        "type": "boolean",
+                        "example": false
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": [
+          "User"
+        ],
+        "summary": "Login an existing user",
+        "description": "This is called when the client try to login an exsiting user.",
+        "operationId": "userFun.loginUser",
+        "requestBody": {
+          "description": "Login user object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "Bluefish@bluefish.come"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "mypass"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "An exsiting user is login.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "If an existing user is login, a positive user id will be return. -1 means email not registered. -2 means wrong password.",
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Login succeffully."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/scores": {
+      "get": {
+        "tags": [
+          "Score"
+        ],
+        "summary": "Get the list of top scores",
+        "operationId": "scoreFun.getScores",
+        "responses": {
+          "200": {
+            "description": "Successfully get list of top scores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "rank": {
+                        "type": "integer",
+                        "example": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Blue Fish"
+                      },
+                      "score": {
+                        "type": "integer",
+                        "example": 8000
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Score"
+        ],
+        "summary": "Set a new score",
+        "description": "Once the client side complete a game, a new score will be sent to the server. If the new score is within the top 10, it will be recorded in the server.",
+        "operationId": "userFun.setScore",
+        "requestBody": {
+          "description": "New score object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "score": {
+                    "type": "integer",
+                    "example": 12000
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "A new score is checked and could be added..",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "rank": {
+                      "description": "The rank of the new score, if it is in top 10, a positive number reflect its rank will be set. Otherwise, 0.",
+                      "type": "integer",
+                      "example": 3
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Rank added."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
